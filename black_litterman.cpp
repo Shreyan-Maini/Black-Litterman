@@ -3,35 +3,34 @@
 
 // Main function
 int main() {
-    // Sector weights (views in decimal form)
+    
     Eigen::VectorXd sector_views(13);
     sector_views << 0.1467, 0.0, 0.0905, 0.0815, 0.0, 0.1192, 0.1238, 0.1676,
                     0.1156, 0.0, 0.1097, 0.0709, 0.0433;
 
-    // Market cap weights
+    
     Eigen::VectorXd market_cap_weights(13);
     market_cap_weights << 0.0337, 0.0220, 0.0755, 0.1021, 0.0576, 0.1117, 0.1290,
                           0.3301, 0.0991, 0.0270, 0.0228, 0.1150, 0.1000;
 
-    // Volatilities (3-year annualized standard deviations)
+
     Eigen::VectorXd volatilities(13);
     volatilities << 0.3712, 0.2876, 0.2345, 0.2987, 0.1876, 0.2234, 0.2765,
                     0.3301, 0.2654, 0.1765, 0.2123, 0.3012, 0.0876;
 
-    // Correlation matrix
+    
     Eigen::MatrixXd correlation_matrix = Eigen::MatrixXd::Constant(13, 13, 0.3);
     for (int i = 0; i < 13; ++i) correlation_matrix(i, i) = 1.0;  // Diagonal = 1
 
-    // Group-specific adjustments
     std::vector<std::pair<int, int>> higher_correlations = {
-        {7, 8}, {3, 4}, {6, 10}  // Technology/Communication, Consumer sectors, Finance/Real Estate
+        {7, 8}, {3, 4}, {6, 10}  
     };
     for (auto& pair : higher_correlations) {
         correlation_matrix(pair.first, pair.second) = 0.5;
         correlation_matrix(pair.second, pair.first) = 0.5;
     }
 
-    // Calculate covariance matrix
+    
     Eigen::MatrixXd cov_matrix(13, 13);
     for (int i = 0; i < 13; ++i) {
         for (int j = 0; j < 13; ++j) {
